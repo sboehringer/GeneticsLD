@@ -1,0 +1,5 @@
+useDynLib(GeneticsLD)
+exportPattern("^[[:alpha:]]+")
+import(methods, Rcpp)
+importFrom(Rcpp, loadModule)
+importFrom(Rcpp, loadRcppModules, evalCpp)
