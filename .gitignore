@@ -2,4 +2,5 @@ productionHistory
 *.o
 *.so
 GeneticsLD/man
-haplotype_cpp
+CMakeCache.txt
+CMakeFiles
