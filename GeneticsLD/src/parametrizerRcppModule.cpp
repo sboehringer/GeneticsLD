@@ -1,7 +1,10 @@
 /*
- * parametrizerrcpp_module.h
+ * parametrizerrcpp_module.cpp
  * Mon Sep 30 12:28:59 2013
  */
+
+#include	<Rcpp.h>
+#include	"parametrizerrcpp.h"
 
 // -- begin inline Rcpp
 RCPP_MODULE(ParametrizerModule) {
