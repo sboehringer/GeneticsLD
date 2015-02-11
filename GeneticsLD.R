@@ -4,17 +4,15 @@
 
 library('devtools');
 
-if (T) {
+library('Rcpp');
+if (F) {
 	#system('rm GeneticsLD/src/*.o GeneticsLD/src/*.so');
 	Sys.setenv("PKG_CXXFLAGS"="-std=c++11")
 	install('GeneticsLD', threads = 6);
 }
 
-library('Rcpp');
-#source('GeneticsLD/R/mcmc.R');
-
 if (F) {
-	library('GeneticsHaplotype');
+	library('GeneticsLD');
 	#M = Module('Reconstructor', PACKAGE = 'GeneticsHaplotype');
 }
 
@@ -60,4 +58,20 @@ print(p1sM);
 	});
 	rDf = Df(t(r), names = c('#h', '#', '#S', ns, ns));
 	print(round(rDf, 2));
+}
+
+std = function(v)(v/sum(v))
+hfs2cumu = function(hfs) {
+	hfs = std(hfs);
+	P = new(parametrizer);
+	cumu = P$multinomial2cumu(hfs);
+	cumuStd = P$multinomial2cumuStd(hfs);
+	rbind(hfs, cumu, cumuStd)
+}
+
+if (1) {
+	require('GeneticsLD');
+	print(hfs2cumu(1:4));
+	print(hfs2cumu(c(0, 1, 1, 1)));
+	print(hfs2cumu(c(0, 0, 1, 1)));
 }

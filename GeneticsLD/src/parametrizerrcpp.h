@@ -1,1 +1,1 @@
-/home/pingu/Documents/Projekte/2015-01-GeneticsLD/src/haplotypes_cpp/parametrizerrcpp.h
+../../haplotypes_cpp/parametrizerrcpp.h
