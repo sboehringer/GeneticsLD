@@ -3,10 +3,17 @@
 #Fri Feb  6 17:31:47 CET 2015
 
 library('devtools');
-
+library('roxygen2');
+#source('GeneticsLD/R/Rdata.R')
+#source('GeneticsLD/R/visualization.R')
 library('Rcpp');
+
 if (F) {
 	#system('rm GeneticsLD/src/*.o GeneticsLD/src/*.so');
+
+	roxygenise('GeneticsLD', roclets = 'rd');
+	roxygenize('.', roclets = 'collate');
+	roxygenise('GeneticsLD', roclets = 'namespace');
 	Sys.setenv("PKG_CXXFLAGS"="-std=c++11")
 	install('GeneticsLD', threads = 6);
 }
@@ -74,4 +81,12 @@ if (1) {
 	print(hfs2cumu(1:4));
 	print(hfs2cumu(c(0, 1, 1, 1)));
 	print(hfs2cumu(c(0, 0, 1, 1)));
+}
+# data from
+# http://hapmap.ncbi.nlm.nih.gov/downloads/phasing/2007-08_rel22/phased/
+#
+if (1) {
+	d = readPhasedData('data/genotypes_chr6_CEU_r22_nr.b36_fwd');
+	snps = SelectSNPsOrder('rs9269794', d, marginNeg = 1, marginPos = 1, maf = .05);
+	htfs = haplotypeFrequencies(snps$hts);
 }

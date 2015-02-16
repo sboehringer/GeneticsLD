@@ -4,6 +4,9 @@
 
 library('ggplot2');
 
+# <!> copy from Rstatistics.R
+vector.std = function(v, C = 1)(C * v / sum(v));
+
 selectSNPsPhysical = function(snp = 'rs9269794', legend, marginNeg = 1e5, marginPos = 1e5) {
 	snp = as.character(snp);
 	i = which(legend$rs == snp);
@@ -60,6 +63,24 @@ SelectSNPsPhysical = function(snp = 'rs9269794', data, marginNeg = 1e5, marginPo
 	r = legend$rs[snps];
 	r
 }
+
+#' Read phased hapmap data
+#'
+#' @param path path prefix
+#' @param postfix
+#' @export
+readPhasedData = function(path, postfixHts = '.phase.gz', postfixLegend = '_legend.txt.gz') {
+	hts = read.table(sprintf('%s%s', path, postfixHts));
+	legend = read.table(sprintf('%s%s', path, postfixLegend), header = T, stringsAsFactors = T);
+	data = list(hts = hts, legend = legend);
+	data
+}
+
+#' Fetch data matrix of genotypes for SNPs sourrounding a given SNP
+#'
+#' @param snp name of SNP (rs-number), will be included in the result
+#' @param data set as read by snpMatrix
+#' @export
 SelectSNPsOrder = function(snp = 'rs9269794', data, marginNeg = 5, marginPos = 5, maf = .05, buffer = 2) {
 	snp = as.character(snp);	# remove factor status
 	# <p> buffered selection
@@ -86,6 +107,10 @@ snpCombinations = function(snp, data, N = 3, ..., selectionBy = selectSNPsPhysic
 	r
 }
 
+#' Compute haplotype frequencies from matrix of alleles with rows representing haplotypes
+#'
+#' @param hts 0-1 valued matrix with rows representing haplotypes
+#' @export
 haplotypeFrequencies = function(hts) {
 	N = ncol(hts);
 	htsO = apply(hts, 1, bin2ord);
