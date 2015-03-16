@@ -273,3 +273,17 @@ visualizeToPath = function(centerSnp, modelList, data, output, parFunction = par
 		opts(axis.text.x=theme_text(angle=-90)) + xlab(NULL) + ylab(NULL);
 	ggsave(p, file = output, width = 14, height = 8);
 }
+
+#' Visualize a matrix of values
+#'
+#' @param mat matrix with values
+#' @export
+visualizeMatrix = function(mat) {
+	vmD = reshape.long(data.frame(mat), factorColumn = 'x', rowNamesAs = 'y');
+	p = ggplot(vmD, aes(x, y, fill = value)) + geom_raster() +
+		scale_fill_gradient2(low = "blue", mid = "white", high = "red",
+			midpoint = 0.5, space = "rgb", na.value = "grey50", guide = "colourbar") +
+		opts(axis.text.x = theme_text(angle=-90)) +
+		opts(axis.text.x=theme_text(angle=-90)) + xlab(NULL) + ylab(NULL);
+	p
+}
