@@ -237,6 +237,8 @@ public:
 	void	flipped(const Parameter1s<T>& other, haplotype_t flipMask);
 	virtual	const char	*className(void) const { return "1s"; }
 	Parameter1sMinMax<T>	minMax(void) const;
+
+	inline T	destandardize(T cumStd, T cumMin, T cumMax) const;
 };
 typedef Parameter1s<parameter_t>	Parameter1sL;
 
@@ -614,10 +616,15 @@ public:
 	};
 
 
-	void	from1s(const Parameter1s<T>& other);
+	void		from1s(const Parameter1s<T>& other);
+	inline T	standardize(T cum, T cumMin, T cumMax) const;
 	virtual	const char	*className(void) const { return "CumuStd"; }
 };
 typedef ParameterCumuStd<parameter_t>	ParameterCumuStdL;
+
+template <class T> inline T ParameterCumuStd<T>::standardize(T cum, T cumMin, T cumMax) const {
+	return !(cumMax - cumMin)? 1: ((cum - cumMin) / (cumMax - cumMin));
+}
 
 template <class T> void ParameterCumuStd<T>::from1s(const Parameter1s<T>& other) {
 	(*this)[0] = 0;	// undefined, there is no haplotype with 0 loci
@@ -676,7 +683,8 @@ template <class T> void ParameterCumuStd<T>::from1s(const Parameter1s<T>& other)
 		}
 		T	cumMin = min1s + cum, cumMax = max1s + cum;
 		cum += other[h];
-		(*this)[h] = !(cumMax - cumMin)? 1: ((cum - cumMin) / (cumMax - cumMin));
+		//(*this)[h] = !(cumMax - cumMin)? 1: ((cum - cumMin) / (cumMax - cumMin));
+		(*this)[h] = (*this).standardize(cum, cumMin, cumMax);
 	}
 
 }
@@ -740,8 +748,72 @@ template <class T> void Parameter1s<T>::fromCumuStd(const ParameterCumuStd<T>& o
 			cum += t;
 		}
 		T	cumMin = min1s - cum, cumMax = max1s - cum;
-		(*this)[h] = other[h] * (cumMax - cumMin) + cumMin;
+		//(*this)[h] = other[h] * (cumMax - cumMin) + cumMin;
+		(*this)[h] = destandardize(other[h], cumMin, cumMax);
 	}
+}
+
+template <class T> inline T	Parameter1s<T>::destandardize(T cumStd, T cumMin, T cumMax) const {
+	return cumStd * (cumMax - cumMin) + cumMin;
+}
+
+
+template <class T> class ParameterCumuStd1 : public ParameterCumuStd<T>
+{
+public:
+    ParameterCumuStd1(vector<double> &values, ParameterHelper &ph) : Parameter<T>(values, ph) {};
+	ParameterCumuStd1(int nloci_, ParameterHelper &ph) : Parameter<T>(nloci_, ph) {};
+    ParameterCumuStd1(const Parameter1s<T> &p) : Parameter<T>((Parameter<T>)p)  {
+		from1s(p);
+	};
+
+	inline T	standardize(T cum, T cumMin, T cumMax) const;
+	virtual	const char	*className(void) const { return "CumuStd1"; }
+};
+
+template <class T> inline T ParameterCumuStd1<T>::standardize(T cum, T cumMin, T cumMax) const {
+	return !(cumMax - cumMin)? 1 : (
+		cumMin >= 0? ((cum - cumMin) / (cumMax - cumMin)): (
+		cumMax <= 0? -((cum - cumMin) / (cumMax - cumMin)): (
+		cum > 0? cum/cumMax: (-cum/cumMin)
+	)));
+}
+
+
+template <class T> class Parameter1sStd1 : public Parameter1s<T>
+{
+public:
+    Parameter1sStd1(const vector<double> &values, const ParameterHelper &ph) : Parameter<T>(values, ph) {};
+	Parameter1sStd1(int nloci_, const ParameterHelper &ph) : Parameter<T>(nloci_, ph) {};
+    Parameter1sStd1(const ParameterMultinomial<T> &p) : Parameter<T>((Parameter<T>)p)  {
+		fromMultinomial(p);
+	};
+    Parameter1sStd1(const Parameter1sStd<T> &p) : Parameter<T>((Parameter<T>)p)  {
+		from1sStd(p);
+	};
+    Parameter1sStd1(const ParameterCumu<T> &p) : Parameter<T>((Parameter<T>)p)  {
+		fromCumu(p);
+	};
+    Parameter1sStd1(const ParameterCumuStd<T> &p) : Parameter<T>((Parameter<T>)p)  {
+		fromCumuStd(p);
+	};
+    Parameter1sStd1(const PartitionCache &c_) : Parameter<T>(c_)
+	{};
+    Parameter1sStd1(const Parameter1sStd1<T> &other, haplotype_t flipMask) : Parameter<T>(other.c) {
+		flipped(other, flipMask);
+	};
+
+	inline T	destandardize(T cumStd, T cumMin, T cumMax) const;
+	virtual	const char	*className(void) const { return "CumuStd1"; }
+};
+
+template <class T> inline T	Parameter1sStd1<T>::destandardize(T cumStd, T cumMin, T cumMax) const {
+	return !(cumMax - cumMin)? cumMin : (
+		cumMin >= 0? (cumStd * (cumMax - cumMin) + cumMin): (
+		cumMax <= 0? (cumStd * (cumMax - cumMin) + cumMin): (
+		cumStd > 0? cumStd * cumMax: (cumStd * cumMin)
+	)));
+	//return cumStd * (cumMax - cumMin) + cumMin;
 }
 
 #endif // PARAMETER_H

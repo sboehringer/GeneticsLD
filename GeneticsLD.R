@@ -85,8 +85,15 @@ if (1) {
 # data from
 # http://hapmap.ncbi.nlm.nih.gov/downloads/phasing/2007-08_rel22/phased/
 #
-if (1) {
+if (0) {
 	d = readPhasedData('data/genotypes_chr6_CEU_r22_nr.b36_fwd');
 	snps = SelectSNPsOrder('rs9269794', d, marginNeg = 1, marginPos = 1, maf = .05);
 	htfs = haplotypeFrequencies(snps$hts);
+}
+
+if (1) {
+	chr21 = readPhasedData('/Users/Lena/Desktop/internship/Data/genotypeschr21/genotypes_chr21_CEU_r22_nr.b36_fwd')
+	s <- SelectSNPsOrder("rs8130901", chr21, marginNeg = 1, marginPos = 1, maf = .05)
+	hs <- haplotypeFrequencies(s$hts)
+	snp.list<-chr21$legend[100:199,1]  
 }

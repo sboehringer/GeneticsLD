@@ -47,6 +47,9 @@ public:
 	vector<double>	*multinomial2cumuStd(vector<double> &i);
 	vector<double>	*cumuStd2multinomial(vector<double> &i);
 
+	vector<double>	*multinomial2cumuStd1(vector<double> &i);
+	vector<double>	*cumuStd12multinomial(vector<double> &i);
+
 	vector<double>	*p1s2cumuStd(vector<double> &i);
 	vector<double>	*cumuStd2p1s(vector<double> &i);
 };

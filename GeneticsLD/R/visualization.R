@@ -80,6 +80,7 @@ readPhasedData = function(path, postfixHts = '.phase.gz', postfixLegend = '_lege
 #'
 #' @param snp name of SNP (rs-number), will be included in the result
 #' @param data set as read by snpMatrix
+#' @param buffer factor by which to extend window to retain enough SNPs after filtering
 #' @export
 SelectSNPsOrder = function(snp = 'rs9269794', data, marginNeg = 5, marginPos = 5, maf = .05, buffer = 2) {
 	snp = as.character(snp);	# remove factor status
@@ -257,7 +258,8 @@ visualizeWindow = function(centerSnp, window = 3e4, data, models, maf = 0.05,
 		selectionBy = selectionBy, parFunction = parFunction);
 }
 
-visualizeToPath = function(centerSnp, modelList, data, output, parFunction = parValues, window = 30, maf = 0.05, visualizer = visualizeSnp) {
+visualizeToPath = function(centerSnp, modelList, data, output, parFunction = parValues, window = 30,
+	maf = 0.05, visualizer = visualizeSnp) {
 	print(iterateModels(modelList)$models);
 	v = visualizeWindow(centerSnp, window = window, data, modelList, maf = maf,
 		parFunction = parFunction,
@@ -269,8 +271,10 @@ visualizeToPath = function(centerSnp, modelList, data, output, parFunction = par
 	p = ggplot(vmD, aes(x, y, fill = value)) + geom_raster() +
 		scale_fill_gradient2(low = "blue", mid = "white", high = "red",
 			midpoint = 0.5, space = "rgb", na.value = "grey50", guide = "colourbar") +
-		opts(axis.text.x = theme_text(angle=-90)) +
-		opts(axis.text.x=theme_text(angle=-90)) + xlab(NULL) + ylab(NULL);
+		theme(axis.text.x = element_text(angle=-90)) +
+		theme(axis.text.x = element_text(angle=-90)) + xlab(NULL) + ylab(NULL);
+		#opts(axis.text.x = theme_text(angle=-90)) +
+		#opts(axis.text.x=theme_text(angle=-90)) + xlab(NULL) + ylab(NULL);
 	ggsave(p, file = output, width = 14, height = 8);
 }
 

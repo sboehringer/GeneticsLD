@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(haplotype_cpp)
 
-set(CMAKE_CXX_FLAGS "-std=c++0x")
+set(CMAKE_CXX_FLAGS "-std=c++11")
 include_directories(/usr/local/lib64/R-3.0.1/library/Rcpp/include /usr/local/lib64/R-3.0.1/include/)
 link_directories(/usr/local/lib64/R-3.0.1/lib /usr/local/lib64/R-3.0.1/library/Rcpp/lib)
 
