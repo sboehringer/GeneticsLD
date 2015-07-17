@@ -515,7 +515,7 @@ template <class T> void ParameterCumu<T>::from1s(const Parameter1s<T>& other) {
 template <class T> void Parameter1s<T>::fromCumu(const ParameterCumu<T>& other) {
 	// iterate from cumulants of low order to cumulants of high order
 	//cout << "\n1s from cumu\n";
-	(*this)[0] = 0;	// undefined, there is no haplotype with 0 loci
+	(*this)[0] = 1;	// undefined, there is no haplotype with 0 loci
 	for (int i = 1; i <= this->Nloci; i++) {
 		for (int j = 0; j < this->c.bitOrder[i].size(); j++) {
 			// binary represenation: 1 represents retained locus, 0: marginalization
@@ -747,16 +747,15 @@ template <class T> void Parameter1s<T>::fromCumuStd(const ParameterCumuStd<T>& o
 			}
 			cum += t;
 		}
-		T	cumMin = min1s - cum, cumMax = max1s - cum;
+		T	cumMin = min1s + cum, cumMax = max1s + cum;
 		//(*this)[h] = other[h] * (cumMax - cumMin) + cumMin;
-		(*this)[h] = destandardize(other[h], cumMin, cumMax);
+		(*this)[h] = destandardize(other[h], cumMin, cumMax) - cum;
 	}
 }
 
 template <class T> inline T	Parameter1s<T>::destandardize(T cumStd, T cumMin, T cumMax) const {
-	return cumStd * (cumMax - cumMin);
+	return cumStd * (cumMax - cumMin) + cumMin;
 }
-
 
 template <class T> class ParameterCumuStd1 : public ParameterCumuStd<T>
 {
@@ -809,12 +808,14 @@ public:
 };
 
 template <class T> inline T	Parameter1sStd1<T>::destandardize(T cumStd, T cumMin, T cumMax) const {
-	return !(cumMax - cumMin)? cumMin : (
-		cumMin >= 0? (cumStd * (cumMax - cumMin)): (
-		cumMax <= 0? (cumStd * (cumMax - cumMin)): (
-		cumStd > 0? cumStd * cumMax: (cumStd * cumMin)
-	)));
+// 	return !(cumMax - cumMin)? cumMin : (
+// 		cumMin >= 0? (cumStd * (cumMax - cumMin) + cumMin): (
+// 		cumMax <= 0? (cumStd * (cumMax - cumMin) + cumMin): (
+// 		cumStd > 0? cumStd * cumMax: (cumStd * cumMin)
+// 	))) - cumResidual;
 	//return cumStd * (cumMax - cumMin) + cumMin;
+
+	return 0;
 }
 typedef Parameter1sStd1<parameter_t>	Parameter1sStd1L;
 
