@@ -12,6 +12,8 @@ RCPP_MODULE(ParametrizerModule) {
 	class_<ParametrizerRcpp>("parametrizer")
 	.constructor()
 	.method("cumu2multinomial", &ParametrizerRcpp::cumu2multinomial)
+	.method("cumuStd2multinomial", &ParametrizerRcpp::cumuStd2multinomial)
+	.method("cumuStd12multinomial", &ParametrizerRcpp::cumuStd12multinomial)
 	.method("multinomial2cumu", &ParametrizerRcpp::multinomial2cumu)
 	.method("multinomial2cumuStd", &ParametrizerRcpp::multinomial2cumuStd)
 	.method("cumuMinMax", &ParametrizerRcpp::cumuMinMax)
@@ -21,5 +23,4 @@ RCPP_MODULE(ParametrizerModule) {
 	.method("p1sMinMax", &ParametrizerRcpp::p1sMinMax)
 	;
 }
-
 // -- end inline Rcpp
