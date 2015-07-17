@@ -41,6 +41,12 @@ vector<double>	*Parametrizer::multinomial2cumuStd(vector<double> &i) {
 	const ParameterCumuStdL		pCumuStd(p1s);
 	return vectorConvert<parameter_t, double>(pCumuStd);
 }
+vector<double>	*Parametrizer::multinomial2cumuStd1(vector<double> &i) {
+	const ParameterMultinomialL	pMultinom(i, h);
+	const Parameter1sL			p1s(pMultinom);
+	const ParameterCumuStd1L	pCumuStd(p1s);
+	return vectorConvert<parameter_t, double>(pCumuStd);
+}
 vector<double>	*Parametrizer::cumuMinMax(vector<double> &i) {
 	const ParameterCumuL	pCumu(i, h);
 	ParameterCumuMinMaxL 	l = pCumu.minMax();	//limits
