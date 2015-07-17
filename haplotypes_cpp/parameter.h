@@ -690,7 +690,7 @@ template <class T> void ParameterCumuStd<T>::from1s(const Parameter1s<T>& other)
 }
 
 template <class T> void Parameter1s<T>::fromCumuStd(const ParameterCumuStd<T>& other) {
-	(*this)[0] = 0;	// undefined, there is no haplotype with 0 loci
+	(*this)[0] = 1;	// needs to be one for algorithm to work (frequency of 0 loci is 1)
 	// iterate haplotypes, from low to high order
 	for (int ones = 1; ones <= this->Nloci; ones++) for (int j = 0; j < this->c.bitOrder[ones].size(); j++) {
 		haplotype_t	h = this->c.bitOrder[ones][j];
@@ -754,7 +754,7 @@ template <class T> void Parameter1s<T>::fromCumuStd(const ParameterCumuStd<T>& o
 }
 
 template <class T> inline T	Parameter1s<T>::destandardize(T cumStd, T cumMin, T cumMax) const {
-	return cumStd * (cumMax - cumMin) + cumMin;
+	return cumStd * (cumMax - cumMin);
 }
 
 
@@ -810,8 +810,8 @@ public:
 
 template <class T> inline T	Parameter1sStd1<T>::destandardize(T cumStd, T cumMin, T cumMax) const {
 	return !(cumMax - cumMin)? cumMin : (
-		cumMin >= 0? (cumStd * (cumMax - cumMin) + cumMin): (
-		cumMax <= 0? (cumStd * (cumMax - cumMin) + cumMin): (
+		cumMin >= 0? (cumStd * (cumMax - cumMin)): (
+		cumMax <= 0? (cumStd * (cumMax - cumMin)): (
 		cumStd > 0? cumStd * cumMax: (cumStd * cumMin)
 	)));
 	//return cumStd * (cumMax - cumMin) + cumMin;

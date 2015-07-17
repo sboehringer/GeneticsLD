@@ -19,6 +19,59 @@ void	vector_print_idx(const Parameter<parameter_t> &p) {
 	vector_print_idx_bin<parameter_t, 3>((vector<parameter_t>)p);
 }
 
+void	multinomialForthBack(ParameterMultinomialL hfs) {
+
+	Parameter1sL			p1s(hfs);
+	ParameterMultinomialL	hfsFp1(p1s);
+
+	Parameter1sStdL			p1std(p1s);
+	Parameter1sL			p1sFp1Std(p1std);
+	ParameterMultinomialL	hfsFp1sFp1Std(p1sFp1Std);
+
+	ParameterCumuL			cumu(p1s);
+	Parameter1sL			p1sFcumu(cumu);
+	ParameterMultinomialL	hfsFp1sFcumu(p1sFcumu);
+
+	ParameterCumuStdL		cumuStd(p1s);
+	Parameter1sL			p1sFcumuStd(cumuStd);
+	ParameterMultinomialL	hfsFp1sFcumuStd(p1sFcumuStd);
+
+	ParameterCumuStd1L		cumuStd1(p1s);
+	Parameter1sStd1L		p1sFcumuStd1(cumuStd1);
+	ParameterMultinomialL	hfsFp1sFp1sFcumuStd1(p1sFcumuStd1);
+
+	cout.precision(3);
+	cout << "Haplotype frequencies: " << endl;
+	cout << "multin:  "; vector_print_idx_bin<parameter_t, 3>(hfs); cout << endl;
+
+	cout << "Roundtrip: hfs -> p1s -> hfs" << endl;
+	cout << "1s:      "; vector_print_idx_bin<parameter_t, 3>(p1s);
+	cout << "multin:  "; vector_print_idx_bin<parameter_t, 3>(hfsFp1); cout << endl;
+
+	cout << "Roundtrip: hfs -> p1s -> p1sStd -> p1s -> hfs" << endl;
+	cout << "1sStd:   "; vector_print_idx_bin<parameter_t, 3>(p1std);
+	cout << "1s:      "; vector_print_idx_bin<parameter_t, 3>(p1sFp1Std);
+	cout << "multin:  "; vector_print_idx_bin<parameter_t, 3>(hfsFp1sFp1Std); cout << endl;
+
+	cout << "Roundtrip: hfs -> p1s -> cumu -> p1s -> hfs" << endl;
+	cout << "cumu:    "; vector_print_idx_bin<parameter_t, 3>(cumu);
+	cout << "1s:      "; vector_print_idx_bin<parameter_t, 3>(p1sFcumu);
+	cout << "multin:  "; vector_print_idx_bin<parameter_t, 3>(hfsFp1sFcumu); cout << endl;
+
+	cout << "Roundtrip: hfs -> p1s -> cumuStd -> p1s -> hfs" << endl;
+	cout << "cumuStd: "; vector_print_idx_bin<parameter_t, 3>(cumuStd);
+	cout << "1s:      "; vector_print_idx_bin<parameter_t, 3>(p1sFcumuStd);
+	cout << "multin:  "; vector_print_idx_bin<parameter_t, 3>(hfsFp1sFcumuStd); cout << endl;
+
+	cout << "Roundtrip: hfs -> p1s -> cumuStd1 -> p1s -> hfs" << endl;
+	cout << "cumuStd: "; vector_print_idx_bin<parameter_t, 3>(cumuStd1);
+	cout << "1s:      "; vector_print_idx_bin<parameter_t, 3>(p1sFcumuStd1);
+	cout << "multin:  "; vector_print_idx_bin<parameter_t, 3>(hfsFp1sFp1sFcumuStd1); cout << endl;
+
+	cout.precision(2);
+
+}
+
 int main(int argc, char **argv) {
     std::cout << "Hello, world!" << std::endl;
 
@@ -409,7 +462,7 @@ int main(int argc, char **argv) {
 
 #	endif
 
-#	if 1
+#	if 0
 #	define	Nloci	3
 #	define	N		(1 << Nloci)
 	default_random_engine	generator;
@@ -443,9 +496,24 @@ int main(int argc, char **argv) {
 		cout << "1sStd    "; vector_print_idx_bin<parameter_t, 3>(p1std);
 		cout.precision(2);
 	}
-
 #	endif
 
+#	if 1
+#	define	Nloci	3
+#	define	N		(1 << Nloci)
+	default_random_engine	generator;
+	const ParameterHelper	h(5);
+
+	vector< vector<double> > hfsArray {
+		{ .1, 0, .3, .05, .5, .1, 0, 0 },
+		{ 0, 1, 1, 0, 1, 1, 0, 0 },
+	};
+
+	for (int i = 0; i < hfsArray.size(); i++) {
+		ParameterMultinomialL	pm(hfsArray[i], h);
+		multinomialForthBack(pm);
+	}
+	#	endif
 	cout.flush();
 	return 0;
 }
