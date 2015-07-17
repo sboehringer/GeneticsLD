@@ -761,10 +761,10 @@ template <class T> inline T	Parameter1s<T>::destandardize(T cumStd, T cumMin, T 
 template <class T> class ParameterCumuStd1 : public ParameterCumuStd<T>
 {
 public:
-    ParameterCumuStd1(vector<double> &values, ParameterHelper &ph) : Parameter<T>(values, ph) {};
-	ParameterCumuStd1(int nloci_, ParameterHelper &ph) : Parameter<T>(nloci_, ph) {};
-    ParameterCumuStd1(const Parameter1s<T> &p) : Parameter<T>((Parameter<T>)p)  {
-		from1s(p);
+    ParameterCumuStd1(vector<double> &values, ParameterHelper &ph) : ParameterCumuStd<T>(values, ph) {};
+	ParameterCumuStd1(int nloci_, ParameterHelper &ph) : ParameterCumuStd<T>(nloci_, ph) {};
+    ParameterCumuStd1(const Parameter1s<T> &p) : ParameterCumuStd<T>((ParameterCumuStd<T>)p)  {
+		this->from1s(p);
 	};
 
 	inline T	standardize(T cum, T cumMin, T cumMax) const;
@@ -778,29 +778,30 @@ template <class T> inline T ParameterCumuStd1<T>::standardize(T cum, T cumMin, T
 		cum > 0? cum/cumMax: (-cum/cumMin)
 	)));
 }
+typedef ParameterCumuStd1<parameter_t>	ParameterCumuStd1L;
 
 
 template <class T> class Parameter1sStd1 : public Parameter1s<T>
 {
 public:
-    Parameter1sStd1(const vector<double> &values, const ParameterHelper &ph) : Parameter<T>(values, ph) {};
-	Parameter1sStd1(int nloci_, const ParameterHelper &ph) : Parameter<T>(nloci_, ph) {};
-    Parameter1sStd1(const ParameterMultinomial<T> &p) : Parameter<T>((Parameter<T>)p)  {
-		fromMultinomial(p);
+    Parameter1sStd1(const vector<double> &values, const ParameterHelper &ph) : Parameter1s<T>(values, ph) {};
+	Parameter1sStd1(int nloci_, const ParameterHelper &ph) : Parameter1s<T>(nloci_, ph) {};
+    Parameter1sStd1(const ParameterMultinomial<T> &p) : Parameter1s<T>((Parameter1s<T>)p)  {
+		this->fromMultinomial(p);
 	};
-    Parameter1sStd1(const Parameter1sStd<T> &p) : Parameter<T>((Parameter<T>)p)  {
-		from1sStd(p);
+    Parameter1sStd1(const Parameter1sStd<T> &p) : Parameter1s<T>((Parameter1s<T>)p)  {
+		this->from1sStd(p);
 	};
-    Parameter1sStd1(const ParameterCumu<T> &p) : Parameter<T>((Parameter<T>)p)  {
-		fromCumu(p);
+    Parameter1sStd1(const ParameterCumu<T> &p) : Parameter1s<T>((Parameter1s<T>)p)  {
+		this->fromCumu(p);
 	};
-    Parameter1sStd1(const ParameterCumuStd<T> &p) : Parameter<T>((Parameter<T>)p)  {
-		fromCumuStd(p);
+    Parameter1sStd1(const ParameterCumuStd<T> &p) : Parameter1s<T>((Parameter1s<T>)p)  {
+		this->fromCumuStd(p);
 	};
-    Parameter1sStd1(const PartitionCache &c_) : Parameter<T>(c_)
+    Parameter1sStd1(const PartitionCache &c_) : Parameter1s<T>(c_)
 	{};
-    Parameter1sStd1(const Parameter1sStd1<T> &other, haplotype_t flipMask) : Parameter<T>(other.c) {
-		flipped(other, flipMask);
+    Parameter1sStd1(const Parameter1sStd1<T> &other, haplotype_t flipMask) : Parameter1s<T>(other.c) {
+		this->flipped(other, flipMask);
 	};
 
 	inline T	destandardize(T cumStd, T cumMin, T cumMax) const;
@@ -815,5 +816,6 @@ template <class T> inline T	Parameter1sStd1<T>::destandardize(T cumStd, T cumMin
 	)));
 	//return cumStd * (cumMax - cumMin) + cumMin;
 }
+typedef Parameter1sStd1<parameter_t>	Parameter1sStd1L;
 
 #endif // PARAMETER_H

@@ -66,6 +66,13 @@ vector<double>	*Parametrizer::cumuStd2multinomial(vector<double> &i) {
 	return vectorConvert<parameter_t, double>(pMultinom);
 }
 
+vector<double>	*Parametrizer::cumuStd12multinomial(vector<double> &i) {
+	const ParameterCumuStd1L	pCumuStd(i, h);
+	const Parameter1sStd1L		p1s(pCumuStd);
+	const ParameterMultinomialL	pMultinom(p1s);
+	return vectorConvert<parameter_t, double>(pMultinom);
+}
+
 vector<double>	*Parametrizer::multinomial2p1s(vector<double> &i) {
 	const ParameterMultinomialL	pMultinom(i, h);
 	const Parameter1sL			p1s(pMultinom);
