@@ -27,6 +27,20 @@ SEXP	ParametrizerRcpp::cumu2multinomial(SEXP p) {
 	delete r;
 	return v;
 }
+SEXP	ParametrizerRcpp::cumuStd2multinomial(SEXP p) {
+	vector<double>	p_ = as< vector<double> >(p);
+	vector<double>	*r = Parametrizer::cumuStd2multinomial(p_);
+	SEXP	v = wrap(*r);
+	delete r;
+	return v;
+}
+SEXP	ParametrizerRcpp::cumuStd12multinomial(SEXP p) {
+	vector<double>	p_ = as< vector<double> >(p);
+	vector<double>	*r = Parametrizer::cumuStd12multinomial(p_);
+	SEXP	v = wrap(*r);
+	delete r;
+	return v;
+}
 
 SEXP	ParametrizerRcpp::multinomial2cumu(SEXP p) {
 	vector<double>	p_ = as< vector<double> >(p);
@@ -38,6 +52,13 @@ SEXP	ParametrizerRcpp::multinomial2cumu(SEXP p) {
 SEXP	ParametrizerRcpp::multinomial2cumuStd(SEXP p) {
 	vector<double>	p_ = as< vector<double> >(p);
 	vector<double>	*r = Parametrizer::multinomial2cumuStd(p_);
+	SEXP	v = wrap(*r);
+	delete r;
+	return v;
+}
+SEXP	ParametrizerRcpp::multinomial2cumuStd1(SEXP p) {
+	vector<double>	p_ = as< vector<double> >(p);
+	vector<double>	*r = Parametrizer::multinomial2cumuStd1(p_);
 	SEXP	v = wrap(*r);
 	delete r;
 	return v;

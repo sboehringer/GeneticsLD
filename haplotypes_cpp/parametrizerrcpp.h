@@ -32,8 +32,11 @@ class ParametrizerRcpp : public Parametrizer
 public:
 	ParametrizerRcpp() {}
 	SEXP	cumu2multinomial(SEXP p);
+	SEXP	cumuStd2multinomial(SEXP p);
+	SEXP	cumuStd12multinomial(SEXP p);
 	SEXP	multinomial2cumu(SEXP p);
 	SEXP	multinomial2cumuStd(SEXP p);
+	SEXP	multinomial2cumuStd1(SEXP p);
 	SEXP	cumuMinMax(SEXP p);
 
 	SEXP	p1s2multinomial(SEXP p);
